@@ -29,6 +29,11 @@ html, body, #root {
 }
 `;
 
+function isHtmlContent(code: string): boolean {
+  const trimmed = code.trimStart().toLowerCase();
+  return trimmed.startsWith("<!doctype") || trimmed.startsWith("<html");
+}
+
 export function ArtifactFullscreen({ artifactId }: ArtifactFullscreenProps) {
   const { setFullscreenArtifactId } = useWorkspaceStore();
   const [code, setCode] = useState<string | null>(null);
@@ -100,12 +105,13 @@ export function ArtifactFullscreen({ artifactId }: ArtifactFullscreenProps) {
             style={{ height: `calc(94vh - ${HEADER_HEIGHT}px)` }}
           >
             <SandpackProvider
-              template="react"
+              template={isHtmlContent(code) ? "static" : "react"}
               theme="dark"
-              files={{
-                "/App.js": code,
-                "/styles.css": { code: FULLSCREEN_STYLES },
-              }}
+              files={
+                isHtmlContent(code)
+                  ? { "/index.html": code }
+                  : { "/App.js": code, "/styles.css": { code: FULLSCREEN_STYLES } }
+              }
             >
               <SandpackLayout
                 style={{

@@ -19,6 +19,11 @@ html, body, #root {
 }
 `;
 
+function isHtmlContent(code: string): boolean {
+  const trimmed = code.trimStart().toLowerCase();
+  return trimmed.startsWith("<!doctype") || trimmed.startsWith("<html");
+}
+
 interface ArtifactSandpackProps {
   artifactId?: string;
   code?: string;
@@ -54,15 +59,18 @@ export function ArtifactSandpack({
     );
   }
 
+  const html = isHtmlContent(code);
+
   return (
     <div className="artifact-sandpack-fill w-full h-full">
       <SandpackProvider
-        template="react"
+        template={html ? "static" : "react"}
         theme="dark"
-        files={{
-          "/App.js": code,
-          "/styles.css": { code: FILL_STYLES },
-        }}
+        files={
+          html
+            ? { "/index.html": code }
+            : { "/App.js": code, "/styles.css": { code: FILL_STYLES } }
+        }
       >
         <SandpackLayout
           style={{

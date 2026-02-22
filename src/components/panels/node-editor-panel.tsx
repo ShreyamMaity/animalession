@@ -49,7 +49,15 @@ export function NodeEditorPanel({ projectId }: NodeEditorPanelProps) {
       setShape(editingNode.shape);
       setType(editingNode.type);
       setSize(editingNode.size);
-      setHtmlCode("");
+      // Fetch artifact code if editing an artifact node
+      if (editingNode.type === "ARTIFACT" && editingNode.artifactId) {
+        fetch(`/api/artifacts/${editingNode.artifactId}`)
+          .then((r) => r.json())
+          .then((data) => setHtmlCode(data.html || ""))
+          .catch(() => setHtmlCode(""));
+      } else {
+        setHtmlCode(editingNode.content ?? "");
+      }
     } else {
       setTitle("");
       setContent("");
@@ -67,8 +75,22 @@ export function NodeEditorPanel({ projectId }: NodeEditorPanelProps) {
 
     setLoading(true);
     try {
-      if (type === "ARTIFACT" && htmlCode.trim()) {
-        // Create artifact first, then node linked to it
+      if (type === "ARTIFACT" && htmlCode.trim() && editingNode?.artifactId) {
+        // Update existing artifact code + node metadata
+        const artifactRes = await fetch(`/api/artifacts/${editingNode.artifactId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: title.trim(), html: htmlCode.trim() }),
+        });
+        if (!artifactRes.ok) throw new Error("Failed to update artifact");
+
+        await fetch(`/api/projects/${projectId}/nodes/${editingNode.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, color, shape, type, size }),
+        });
+      } else if (type === "ARTIFACT" && htmlCode.trim()) {
+        // Create new artifact + node
         const artifactRes = await fetch("/api/artifacts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -166,13 +188,13 @@ export function NodeEditorPanel({ projectId }: NodeEditorPanelProps) {
             </div>
           </div>
 
-          {isArtifactMode && !editingNode ? (
+          {isArtifactMode ? (
             <div>
               <label className="text-sm font-medium mb-1.5 block">
-                React / JSX Code
+                Artifact Code
               </label>
               <p className="text-xs text-muted-foreground mb-2">
-                Paste a React component as default export. Supports JSX, hooks, and inline styles.
+                HTML document or React component. Supports full HTML pages, JSX with hooks, and inline styles.
               </p>
               <Textarea
                 value={htmlCode}
@@ -250,12 +272,14 @@ export function NodeEditorPanel({ projectId }: NodeEditorPanelProps) {
           <Button
             type="submit"
             className="w-full"
-            disabled={loading || !title.trim() || (isArtifactMode && !editingNode && !htmlCode.trim())}
+            disabled={loading || !title.trim() || (isArtifactMode && !htmlCode.trim())}
           >
             {loading
               ? "Saving..."
               : editingNode
-                ? "Update Node"
+                ? isArtifactMode
+                  ? "Update Artifact"
+                  : "Update Node"
                 : isArtifactMode
                   ? "Create Artifact Node"
                   : "Create Node"}
