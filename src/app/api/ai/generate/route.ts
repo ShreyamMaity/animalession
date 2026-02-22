@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     }
 
     const message = await anthropic.messages.create({
-      model: model || "claude-sonnet-4-5-20250929",
+      model: model || "claude-opus-4-6",
       max_tokens: 8192,
       system: SYSTEM_PROMPT,
       messages: [
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
       title,
       html,
       prompt,
-      model: model || "claude-sonnet-4-5-20250929",
+      model: model || "claude-opus-4-6",
     });
 
     const node = await createNode(projectId, {

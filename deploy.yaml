@@ -23,7 +23,11 @@ services:
     image: shreyammaity/animalession:latest
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/animalession_store
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: animalession_store
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       AUTH_SECRET: ${AUTH_SECRET}
       AUTH_URL: https://${DEPLOYMENT_HOST}

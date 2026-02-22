@@ -177,10 +177,10 @@ export function Canvas2D({ nodes, edges, projectId }: Canvas2DProps) {
             const nodeW = 260;
             const nodeH = 60;
 
-            const srcX = dragNodePos?.id === source.id ? dragNodePos.x : source.posX;
-            const srcY = dragNodePos?.id === source.id ? dragNodePos.y : source.posY;
-            const tgtX = dragNodePos?.id === target.id ? dragNodePos.x : target.posX;
-            const tgtY = dragNodePos?.id === target.id ? dragNodePos.y : target.posY;
+            const srcX = dragNodePos && dragNodePos.id === source.id ? dragNodePos.x : source.posX;
+            const srcY = dragNodePos && dragNodePos.id === source.id ? dragNodePos.y : source.posY;
+            const tgtX = dragNodePos && dragNodePos.id === target.id ? dragNodePos.x : target.posX;
+            const tgtY = dragNodePos && dragNodePos.id === target.id ? dragNodePos.y : target.posY;
 
             return (
               <EdgeLine2D
