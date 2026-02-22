@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum NodeType {
+  TEXT
+  ARTIFACT
+  LINK
+  IMAGE
+  NOTE
+}
+
+enum EdgeStyle {
+  SOLID
+  DASHED
+  DOTTED
+}
+
+enum NodeShape {
+  SPHERE
+  CUBE
+  OCTAHEDRON
+  TORUS
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  projects Project[]
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String   @default("#8b5cf6")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  nodes Node[]
+  edges Edge[]
+
+  @@index([userId])
+}
+
+model Node {
+  id        String    @id @default(cuid())
+  projectId String
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  posX  Float @default(0)
+  posY  Float @default(0)
+  posZ  Float @default(0)
+
+  title   String
+  color   String    @default("#8b5cf6")
+  size    Float     @default(1)
+  shape   NodeShape @default(SPHERE)
+  type    NodeType  @default(TEXT)
+  content String?
+
+  artifactId String?
+  artifact   Artifact? @relation(fields: [artifactId], references: [id], onDelete: SetNull)
+
+  metadata Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  edgesFrom Edge[] @relation("SourceNode")
+  edgesTo   Edge[] @relation("TargetNode")
+
+  @@index([projectId])
+}
+
+model Edge {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  sourceNodeId String
+  sourceNode   Node   @relation("SourceNode", fields: [sourceNodeId], references: [id], onDelete: Cascade)
+
+  targetNodeId String
+  targetNode   Node   @relation("TargetNode", fields: [targetNodeId], references: [id], onDelete: Cascade)
+
+  label     String?
+  color     String    @default("#6366f1")
+  style     EdgeStyle @default(SOLID)
+  thickness Float     @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([sourceNodeId])
+  @@index([targetNodeId])
+}
+
+model Artifact {
+  id        String  @id @default(cuid())
+  title     String
+  html      String
+  css       String?
+  js        String?
+  thumbnail String?
+  prompt    String?
+  model     String?
+  metadata  Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  nodes Node[]
+}

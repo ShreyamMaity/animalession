@@ -1,0 +1,59 @@
+export const WORKSPACE_COLORS = {
+  background: "#050510",
+  accent: "#8b5cf6",
+  accentLight: "#a78bfa",
+  accentDark: "#7c3aed",
+  nodeDefault: "#8b5cf6",
+  edgeDefault: "#6366f1",
+  grid: "#1a1a2e",
+  text: "#e2e8f0",
+  textMuted: "#94a3b8",
+} as const;
+
+export const NODE_COLORS = [
+  "#8b5cf6", // violet
+  "#6366f1", // indigo
+  "#3b82f6", // blue
+  "#06b6d4", // cyan
+  "#10b981", // emerald
+  "#f59e0b", // amber
+  "#ef4444", // red
+  "#ec4899", // pink
+  "#f97316", // orange
+  "#84cc16", // lime
+] as const;
+
+export const PROJECT_COLORS = [
+  "#8b5cf6",
+  "#6366f1",
+  "#3b82f6",
+  "#06b6d4",
+  "#10b981",
+  "#f59e0b",
+  "#ef4444",
+  "#ec4899",
+] as const;
+
+export const CAMERA_DEFAULTS = {
+  position: [0, 8, 15] as [number, number, number],
+  fov: 60,
+  near: 0.1,
+  far: 1000,
+  minDistance: 3,
+  maxDistance: 100,
+  minPolarAngle: 0.1,
+  maxPolarAngle: Math.PI / 2 + 0.3,
+} as const;
+
+export const SPIRAL_SPACING = 3;
+export const SPIRAL_Y_OFFSET = 0;
+
+export function getSpiralPosition(index: number): [number, number, number] {
+  const angle = index * 0.8;
+  const radius = SPIRAL_SPACING + index * 0.5;
+  return [
+    Math.cos(angle) * radius,
+    SPIRAL_Y_OFFSET + Math.sin(index * 0.3) * 0.5,
+    Math.sin(angle) * radius,
+  ];
+}
