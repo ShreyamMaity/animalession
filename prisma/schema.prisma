@@ -114,6 +114,14 @@ model Edge {
   @@index([targetNodeId])
 }
 
+model ImageBlob {
+  id        String   @id @default(cuid())
+  data      String   // base64 data (no data: prefix)
+  mimeType  String   // e.g. "image/png"
+  size      Int      // original file size in bytes
+  createdAt DateTime @default(now())
+}
+
 model Artifact {
   id        String  @id @default(cuid())
   title     String

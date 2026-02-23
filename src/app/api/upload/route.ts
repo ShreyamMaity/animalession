@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth-helpers";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
-import crypto from "crypto";
+import { db } from "@/lib/db";
 
 export async function POST(request: Request) {
   try {
@@ -18,26 +16,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    // Validate it's an image
     if (!file.type.startsWith("image/")) {
       return NextResponse.json({ error: "Only image files are allowed" }, { status: 400 });
     }
 
-    // Max 10MB
-    if (file.size > 10 * 1024 * 1024) {
-      return NextResponse.json({ error: "File too large (max 10MB)" }, { status: 400 });
+    // Max 5MB
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json({ error: "File too large (max 5MB)" }, { status: 400 });
     }
 
-    const ext = file.type.split("/")[1]?.replace("jpeg", "jpg") || "png";
-    const filename = `${crypto.randomUUID()}.${ext}`;
-
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(uploadsDir, { recursive: true });
-
     const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(uploadsDir, filename), buffer);
+    const base64 = buffer.toString("base64");
 
-    return NextResponse.json({ url: `/uploads/${filename}` });
+    const blob = await db.imageBlob.create({
+      data: {
+        data: base64,
+        mimeType: file.type,
+        size: file.size,
+      },
+    });
+
+    return NextResponse.json({ url: `/api/images/${blob.id}` });
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
