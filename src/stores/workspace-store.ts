@@ -4,11 +4,6 @@ import type { WorkspaceState } from "@/types";
 export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   selectedNodeId: null,
   hoveredNodeId: null,
-  interactionMode: "orbit",
-  connectSourceId: null,
-  isDragging: false,
-  dragNodeId: null,
-  dragNodePos: null,
   showNodeEditor: false,
   showNodePreview: false,
   showAIPanel: false,
@@ -20,12 +15,6 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   setSelectedNodeId: (id) =>
     set({ selectedNodeId: id, showNodePreview: id !== null }),
   setHoveredNodeId: (id) => set({ hoveredNodeId: id }),
-  setInteractionMode: (mode) =>
-    set({ interactionMode: mode, connectSourceId: null }),
-  setConnectSourceId: (id) => set({ connectSourceId: id }),
-  setIsDragging: (dragging) => set({ isDragging: dragging }),
-  setDragNodeId: (id) => set({ dragNodeId: id }),
-  setDragNodePos: (pos) => set({ dragNodePos: pos }),
   setShowNodeEditor: (show) => set({ showNodeEditor: show }),
   setShowNodePreview: (show) => set({ showNodePreview: show }),
   setShowAIPanel: (show) => set({ showAIPanel: show }),
@@ -38,7 +27,6 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
     set({
       selectedNodeId: null,
       hoveredNodeId: null,
-      connectSourceId: null,
       showNodePreview: false,
       showNodeEditor: false,
       editingNodeId: null,

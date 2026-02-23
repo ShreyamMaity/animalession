@@ -144,3 +144,222 @@
   max-height: none !important;
   min-height: 100% !important;
 }
+
+/* React Flow dark theme overrides */
+.react-flow__background {
+  background-color: #050510 !important;
+}
+
+.react-flow__handle {
+  width: 10px;
+  height: 10px;
+  background: #8b5cf6;
+  border: 2px solid #a78bfa;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.react-flow__node:hover .react-flow__handle,
+.react-flow__handle.connecting {
+  opacity: 1;
+}
+
+.react-flow__connection-line {
+  stroke: #8b5cf6;
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+
+.react-flow__selection {
+  background: rgba(139, 92, 246, 0.08) !important;
+  border: 1px solid rgba(139, 92, 246, 0.4) !important;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #a78bfa !important;
+}
+
+.react-flow__minimap {
+  background: #0a0a1a !important;
+}
+
+.react-flow__controls button {
+  background: rgba(10, 10, 26, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  fill: rgba(255, 255, 255, 0.7) !important;
+}
+
+.react-flow__controls button:hover {
+  background: rgba(139, 92, 246, 0.2) !important;
+}
+
+.react-flow__attribution {
+  display: none !important;
+}
+
+/* ─── Markdown: compact node cards ─── */
+.prose-node {
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+}
+.prose-node h1, .prose-node h2, .prose-node h3,
+.prose-node h4, .prose-node h5, .prose-node h6 {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+  margin: 0.25em 0;
+  line-height: 1.3;
+}
+.prose-node h1 { font-size: 14px; }
+.prose-node h2 { font-size: 13px; }
+.prose-node h3 { font-size: 12px; }
+.prose-node p { margin: 0.2em 0; }
+.prose-node ul, .prose-node ol {
+  padding-left: 1.2em;
+  margin: 0.2em 0;
+}
+.prose-node li { margin: 0.1em 0; }
+.prose-node code {
+  background: rgba(139, 92, 246, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 11px;
+}
+.prose-node pre {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 0.4em 0.6em;
+  margin: 0.3em 0;
+  overflow-x: auto;
+}
+.prose-node pre code {
+  background: none;
+  padding: 0;
+  font-size: 11px;
+}
+.prose-node a {
+  color: #60a5fa;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-node blockquote {
+  border-left: 2px solid rgba(139, 92, 246, 0.4);
+  padding-left: 0.6em;
+  margin: 0.3em 0;
+  color: rgba(255, 255, 255, 0.5);
+}
+.prose-node table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.3em 0;
+  font-size: 11px;
+}
+.prose-node th, .prose-node td {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.2em 0.4em;
+}
+.prose-node th {
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 600;
+}
+.prose-node hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0.4em 0;
+}
+.prose-node img {
+  max-width: 100%;
+  border-radius: 4px;
+  margin: 0.3em 0;
+}
+.prose-node input[type="checkbox"] {
+  margin-right: 0.3em;
+  accent-color: #8b5cf6;
+}
+
+/* ─── Markdown: full preview/editor panels ─── */
+.prose-preview {
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.7);
+}
+.prose-preview h1, .prose-preview h2, .prose-preview h3,
+.prose-preview h4, .prose-preview h5, .prose-preview h6 {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  margin: 0.6em 0 0.3em;
+  line-height: 1.3;
+}
+.prose-preview h1 { font-size: 20px; }
+.prose-preview h2 { font-size: 17px; }
+.prose-preview h3 { font-size: 15px; }
+.prose-preview p { margin: 0.4em 0; }
+.prose-preview ul, .prose-preview ol {
+  padding-left: 1.5em;
+  margin: 0.4em 0;
+}
+.prose-preview li { margin: 0.15em 0; }
+.prose-preview code {
+  background: rgba(139, 92, 246, 0.15);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.prose-preview pre {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 0.75em 1em;
+  margin: 0.5em 0;
+  overflow-x: auto;
+}
+.prose-preview pre code {
+  background: none;
+  padding: 0;
+  font-size: 13px;
+}
+.prose-preview a {
+  color: #60a5fa;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-preview a:hover {
+  color: #93bbfd;
+}
+.prose-preview blockquote {
+  border-left: 3px solid rgba(139, 92, 246, 0.5);
+  padding-left: 0.8em;
+  margin: 0.5em 0;
+  color: rgba(255, 255, 255, 0.55);
+}
+.prose-preview table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5em 0;
+}
+.prose-preview th, .prose-preview td {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.35em 0.6em;
+}
+.prose-preview th {
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 600;
+}
+.prose-preview hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0.6em 0;
+}
+.prose-preview img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin: 0.5em 0;
+}
+.prose-preview input[type="checkbox"] {
+  margin-right: 0.4em;
+  accent-color: #8b5cf6;
+}

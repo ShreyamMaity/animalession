@@ -14,6 +14,8 @@ export async function createEdge(projectId: string, data: CreateEdgeInput) {
       projectId,
       sourceNodeId: data.sourceNodeId,
       targetNodeId: data.targetNodeId,
+      sourceHandle: data.sourceHandle,
+      targetHandle: data.targetHandle,
       label: data.label,
       color: data.color ?? "#6366f1",
       style: data.style ?? "SOLID",

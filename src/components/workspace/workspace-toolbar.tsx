@@ -11,30 +11,18 @@ import {
 import { useWorkspaceStore } from "@/stores/workspace-store";
 import {
   ArrowLeft,
-  MousePointer2,
-  Hand,
-  Link2,
   Sparkles,
   Search,
   Plus,
 } from "lucide-react";
-import type { InteractionMode } from "@/types";
 
 interface WorkspaceToolbarProps {
   projectId: string;
   projectName: string;
 }
 
-const modes: { mode: InteractionMode; icon: React.ReactNode; label: string; key: string }[] = [
-  { mode: "orbit", icon: <Hand className="h-4 w-4" />, label: "Pan", key: "1" },
-  { mode: "select", icon: <MousePointer2 className="h-4 w-4" />, label: "Select & Drag", key: "2" },
-  { mode: "connect", icon: <Link2 className="h-4 w-4" />, label: "Connect Nodes", key: "3" },
-];
-
 export function WorkspaceToolbar({ projectId, projectName }: WorkspaceToolbarProps) {
   const {
-    interactionMode,
-    setInteractionMode,
     setShowAIPanel,
     setShowSearchPanel,
     setShowNodeEditor,
@@ -55,30 +43,6 @@ export function WorkspaceToolbar({ projectId, projectName }: WorkspaceToolbarPro
       </div>
 
       <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-lg p-1 border border-white/10 pointer-events-auto">
-        {modes.map(({ mode, icon, label, key }) => (
-          <Tooltip key={mode}>
-            <TooltipTrigger asChild>
-              <Button
-                variant={interactionMode === mode ? "secondary" : "ghost"}
-                size="icon"
-                className={`h-8 w-8 ${
-                  interactionMode === mode
-                    ? "bg-purple-600 text-white hover:bg-purple-500 ring-2 ring-purple-400/50"
-                    : ""
-                }`}
-                onClick={() => setInteractionMode(mode)}
-              >
-                {icon}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              {label} <Badge variant="outline" className="ml-1 text-[10px]">{key}</Badge>
-            </TooltipContent>
-          </Tooltip>
-        ))}
-
-        <div className="w-px h-6 bg-white/10 mx-1" />
-
         <Tooltip>
           <TooltipTrigger asChild>
             <Button

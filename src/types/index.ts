@@ -13,14 +13,6 @@ export type ProjectWithCounts = Project & {
   };
 };
 
-export type InteractionMode = "orbit" | "select" | "connect";
-
-export interface DragNodePos {
-  id: string;
-  x: number;
-  y: number;
-}
-
 export interface QuickMenuState {
   open: boolean;
   x: number;
@@ -32,11 +24,6 @@ export interface QuickMenuState {
 export interface WorkspaceState {
   selectedNodeId: string | null;
   hoveredNodeId: string | null;
-  interactionMode: InteractionMode;
-  connectSourceId: string | null;
-  isDragging: boolean;
-  dragNodeId: string | null;
-  dragNodePos: DragNodePos | null;
   showNodeEditor: boolean;
   showNodePreview: boolean;
   showAIPanel: boolean;
@@ -47,11 +34,6 @@ export interface WorkspaceState {
 
   setSelectedNodeId: (id: string | null) => void;
   setHoveredNodeId: (id: string | null) => void;
-  setInteractionMode: (mode: InteractionMode) => void;
-  setConnectSourceId: (id: string | null) => void;
-  setIsDragging: (dragging: boolean) => void;
-  setDragNodeId: (id: string | null) => void;
-  setDragNodePos: (pos: DragNodePos | null) => void;
   setShowNodeEditor: (show: boolean) => void;
   setShowNodePreview: (show: boolean) => void;
   setShowAIPanel: (show: boolean) => void;

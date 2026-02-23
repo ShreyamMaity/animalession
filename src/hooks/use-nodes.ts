@@ -1,10 +1,10 @@
 "use client";
 
 import useSWR from "swr";
-import type { Node } from "@/types";
+import type { NodeWithArtifact } from "@/types";
 
 export function useNodes(projectId: string | null) {
-  const { data, error, isLoading, mutate } = useSWR<Node[]>(
+  const { data, error, isLoading, mutate } = useSWR<NodeWithArtifact[]>(
     projectId ? `/api/projects/${projectId}/nodes` : null
   );
 

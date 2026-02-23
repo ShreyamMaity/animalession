@@ -6,6 +6,9 @@ export async function getNodes(projectId: string) {
   return db.node.findMany({
     where: { projectId },
     orderBy: { createdAt: "asc" },
+    include: {
+      artifact: { select: { id: true, html: true } },
+    },
   });
 }
 

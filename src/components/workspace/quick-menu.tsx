@@ -9,9 +9,6 @@ import {
   StickyNote,
   Sparkles,
   Search,
-  Hand,
-  MousePointer2,
-  Plus,
 } from "lucide-react";
 
 interface QuickMenuProps {
@@ -27,10 +24,6 @@ const menuItems = [
   { id: "divider-1", icon: null, label: "", group: "divider" },
   { id: "ai", icon: <Sparkles className="h-4 w-4" />, label: "AI Generate", group: "action" },
   { id: "search", icon: <Search className="h-4 w-4" />, label: "Search", group: "action" },
-  { id: "divider-2", icon: null, label: "", group: "divider" },
-  { id: "pan", icon: <Hand className="h-4 w-4" />, label: "Pan Mode", group: "mode" },
-  { id: "select", icon: <MousePointer2 className="h-4 w-4" />, label: "Select Mode", group: "mode" },
-  { id: "connect", icon: <Link2 className="h-4 w-4" />, label: "Connect Mode", group: "mode" },
 ];
 
 export function QuickMenu({ projectId, onCreateNode }: QuickMenuProps) {
@@ -40,9 +33,6 @@ export function QuickMenu({ projectId, onCreateNode }: QuickMenuProps) {
     setQuickMenu,
     setShowAIPanel,
     setShowSearchPanel,
-    setInteractionMode,
-    setShowNodeEditor,
-    setEditingNodeId,
   } = useWorkspaceStore();
 
   useEffect(() => {
@@ -89,21 +79,12 @@ export function QuickMenu({ projectId, onCreateNode }: QuickMenuProps) {
       case "search":
         setShowSearchPanel(true);
         break;
-      case "pan":
-        setInteractionMode("orbit");
-        break;
-      case "select":
-        setInteractionMode("select");
-        break;
-      case "connect":
-        setInteractionMode("connect");
-        break;
     }
   }
 
   // Clamp position to viewport
   const menuW = 200;
-  const menuH = 340;
+  const menuH = 260;
   const x = Math.min(quickMenu.x, window.innerWidth - menuW - 8);
   const y = Math.min(quickMenu.y, window.innerHeight - menuH - 8);
 

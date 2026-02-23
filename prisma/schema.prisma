@@ -61,9 +61,11 @@ model Node {
   projectId String
   project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  posX  Float @default(0)
-  posY  Float @default(0)
-  posZ  Float @default(0)
+  posX   Float @default(0)
+  posY   Float @default(0)
+  posZ   Float @default(0)
+  width  Float @default(260)
+  height Float @default(80)
 
   title   String
   color   String    @default("#8b5cf6")
@@ -91,11 +93,13 @@ model Edge {
   projectId String
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  sourceNodeId String
-  sourceNode   Node   @relation("SourceNode", fields: [sourceNodeId], references: [id], onDelete: Cascade)
+  sourceNodeId   String
+  sourceNode     Node   @relation("SourceNode", fields: [sourceNodeId], references: [id], onDelete: Cascade)
+  sourceHandle   String?
 
-  targetNodeId String
-  targetNode   Node   @relation("TargetNode", fields: [targetNodeId], references: [id], onDelete: Cascade)
+  targetNodeId   String
+  targetNode     Node   @relation("TargetNode", fields: [targetNodeId], references: [id], onDelete: Cascade)
+  targetHandle   String?
 
   label     String?
   color     String    @default("#6366f1")

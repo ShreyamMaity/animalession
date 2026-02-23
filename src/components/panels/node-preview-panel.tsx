@@ -6,13 +6,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useWorkspaceStore } from "@/stores/workspace-store";
 import { ArtifactSandpack } from "@/components/artifact/artifact-sandpack";
-import { X, Edit, Trash2, Maximize2, ExternalLink } from "lucide-react";
+import { X, Edit, Trash2, Maximize2 } from "lucide-react";
 import { useNodes } from "@/hooks/use-nodes";
-import type { Node } from "@/types";
+import {
+  MarkdownContent,
+  ImageContent,
+  LinkPreviewContent,
+  ArtifactThumbnail,
+} from "@/components/workspace/node-content-renderers";
+import type { NodeWithArtifact } from "@/types";
 
 interface NodePreviewPanelProps {
   projectId: string;
-  nodes: Node[];
+  nodes: NodeWithArtifact[];
 }
 
 export function NodePreviewPanel({ projectId, nodes }: NodePreviewPanelProps) {
@@ -85,28 +91,23 @@ export function NodePreviewPanel({ projectId, nodes }: NodePreviewPanelProps) {
               code={!node.artifactId && node.content ? node.content : undefined}
             />
           </div>
+        ) : node.type === "IMAGE" && node.content ? (
+          <ScrollArea className="flex-1 min-h-0 overflow-hidden">
+            <ImageContent url={node.content} />
+          </ScrollArea>
         ) : isLink ? (
-          <div className="px-4 py-4">
-            <a
-              href={node.content!}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10 text-blue-400 hover:text-blue-300 hover:bg-white/10 transition-all group"
-            >
-              <ExternalLink className="h-5 w-5 shrink-0 group-hover:scale-110 transition-transform" />
-              <span className="text-sm truncate underline underline-offset-2">
-                {node.content}
-              </span>
-            </a>
-          </div>
+          <ScrollArea className="flex-1 min-h-0 overflow-hidden">
+            <LinkPreviewContent
+              url={node.content!}
+              metadata={node.metadata}
+              projectId={node.projectId}
+              nodeId={node.id}
+            />
+          </ScrollArea>
         ) : node.content ? (
           <ScrollArea className="flex-1 min-h-0 overflow-hidden">
-            <div className="px-4 pb-4">
-              <Separator className="bg-white/10 mb-3" />
-              <p className="text-sm text-white/70 whitespace-pre-wrap">
-                {node.content}
-              </p>
-            </div>
+            <Separator className="bg-white/10 mb-3 mx-4" />
+            <MarkdownContent content={node.content} />
           </ScrollArea>
         ) : (
           <div className="flex-1 flex items-center justify-center">

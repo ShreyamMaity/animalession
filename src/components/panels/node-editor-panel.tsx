@@ -14,7 +14,8 @@ import { useWorkspaceStore } from "@/stores/workspace-store";
 import { useNodes } from "@/hooks/use-nodes";
 import { NODE_COLORS } from "@/lib/constants";
 import { getSpiralPosition } from "@/lib/constants";
-import { Code, FileText } from "lucide-react";
+import { Code, FileText, Eye, EyeOff, Upload } from "lucide-react";
+import { MarkdownContent } from "@/components/workspace/node-content-renderers";
 
 interface NodeEditorPanelProps {
   projectId: string;
@@ -40,6 +41,25 @@ export function NodeEditorPanel({ projectId }: NodeEditorPanelProps) {
   const [type, setType] = useState<(typeof types)[number]>("TEXT");
   const [size, setSize] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  async function handleImageUpload(file: File) {
+    if (!file.type.startsWith("image/")) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      if (res.ok) {
+        const { url } = await res.json();
+        setContent(url);
+        if (!title.trim()) setTitle("Pasted Image");
+      }
+    } finally {
+      setUploading(false);
+    }
+  }
 
   useEffect(() => {
     if (editingNode) {
@@ -204,16 +224,86 @@ export function NodeEditorPanel({ projectId }: NodeEditorPanelProps) {
                 className="!field-sizing-fixed min-h-[200px] max-h-[300px] overflow-y-auto resize-y font-mono text-xs"
               />
             </div>
+          ) : type === "IMAGE" ? (
+            <div>
+              <label className="text-sm font-medium mb-1.5 block">Image</label>
+              {/* Paste / Drop zone */}
+              <div
+                className="border-2 border-dashed border-border/50 rounded-lg p-4 mb-2 text-center cursor-pointer hover:border-purple-500/40 transition-colors"
+                onPaste={(e) => {
+                  const items = e.clipboardData?.items;
+                  if (!items) return;
+                  for (const item of items) {
+                    if (item.type.startsWith("image/")) {
+                      e.preventDefault();
+                      const file = item.getAsFile();
+                      if (file) handleImageUpload(file);
+                      break;
+                    }
+                  }
+                }}
+                onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const file = e.dataTransfer.files[0];
+                  if (file?.type.startsWith("image/")) handleImageUpload(file);
+                }}
+                tabIndex={0}
+              >
+                {uploading ? (
+                  <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                    <div className="w-4 h-4 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+                    <span className="text-xs">Uploading...</span>
+                  </div>
+                ) : content ? (
+                  <img src={content} alt="Preview" className="max-h-[120px] mx-auto rounded-lg object-contain" />
+                ) : (
+                  <div className="flex flex-col items-center gap-1.5 text-muted-foreground">
+                    <Upload className="h-5 w-5" />
+                    <span className="text-xs">Paste image or drag & drop</span>
+                  </div>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mb-1.5">Or enter a URL:</p>
+              <Input
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="https://example.com/image.png"
+              />
+            </div>
           ) : (
             <div>
-              <label className="text-sm font-medium mb-1.5 block">Content</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-sm font-medium">Content</label>
+                {(type === "TEXT" || type === "NOTE") && content.length > 0 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 text-xs text-muted-foreground px-2"
+                    onClick={() => setShowPreview(!showPreview)}
+                  >
+                    {showPreview ? (
+                      <><EyeOff className="h-3 w-3 mr-1" />Hide Preview</>
+                    ) : (
+                      <><Eye className="h-3 w-3 mr-1" />Preview</>
+                    )}
+                  </Button>
+                )}
+              </div>
               <Textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                placeholder="Node content or notes..."
+                placeholder={type === "LINK" ? "URL (https://...)" : "Node content or notes... (supports markdown)"}
                 rows={4}
                 className="!field-sizing-fixed max-h-[200px] min-h-[100px] overflow-y-auto resize-y"
               />
+              {showPreview && content.length > 0 && (type === "TEXT" || type === "NOTE") && (
+                <div className="mt-2 rounded-lg border border-border/50 bg-black/30 max-h-[200px] overflow-y-auto">
+                  <MarkdownContent content={content} />
+                </div>
+              )}
             </div>
           )}
 

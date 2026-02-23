@@ -34,26 +34,13 @@ export const PROJECT_COLORS = [
   "#ec4899",
 ] as const;
 
-export const CAMERA_DEFAULTS = {
-  position: [0, 8, 15] as [number, number, number],
-  fov: 60,
-  near: 0.1,
-  far: 1000,
-  minDistance: 3,
-  maxDistance: 100,
-  minPolarAngle: 0.1,
-  maxPolarAngle: Math.PI / 2 + 0.3,
-} as const;
-
-export const SPIRAL_SPACING = 3;
-export const SPIRAL_Y_OFFSET = 0;
-
 export function getSpiralPosition(index: number): [number, number, number] {
+  const spacing = 3;
   const angle = index * 0.8;
-  const radius = SPIRAL_SPACING + index * 0.5;
+  const radius = spacing + index * 0.5;
   return [
-    Math.cos(angle) * radius,
-    SPIRAL_Y_OFFSET + Math.sin(index * 0.3) * 0.5,
-    Math.sin(angle) * radius,
+    Math.cos(angle) * radius * 100,
+    Math.sin(angle) * radius * 100,
+    0,
   ];
 }
